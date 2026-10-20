@@ -1,0 +1,3 @@
+- insert:
+    - id: voice-modes
+      name: '@nibuil/dsh-voice-modes'

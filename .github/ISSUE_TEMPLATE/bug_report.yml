@@ -1,0 +1,114 @@
+name: Bug report
+description: Report a reproducible problem with voice input, installation or configuration.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include API keys, private audio or personal data. Redact logs before posting.
+
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH version
+      description: Output of `dsh --version`, or the version shown in Settings.
+      placeholder: 0.2.1-rc.2
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      placeholder: 0.1.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      placeholder: Chrome 142, Safari 26, Firefox 145
+    validations:
+      required: true
+
+  - type: dropdown
+    id: adapter
+    attributes:
+      label: ASR adapter
+      options:
+        - Xiaomi MiMo
+        - OpenAI-compatible transcription
+        - Unknown / not selected
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Voice mode
+      options:
+        - Direct
+        - Polish
+        - Translate
+        - Custom role
+        - Not related to a mode
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open Voice settings
+        2. Configure ...
+        3. Click the microphone
+        4. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics
+      description: Console errors and the JSON response from `POST /voice-modes/process`, with secrets removed.
+      render: shell
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I removed API keys, private audio and personal data.
+          required: true
+        - label: I searched existing issues for the same problem.
+          required: true

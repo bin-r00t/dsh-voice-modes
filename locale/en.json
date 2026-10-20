@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Voice Mode Input",
+    "description": "Adds a circular microphone button and direct, polish, translate and custom-role modes beside the composer, selecting an ASR adapter from the URL (Xiaomi MiMo and OpenAI-compatible transcription built in) and proxying second-provider requests."
+  }
+}

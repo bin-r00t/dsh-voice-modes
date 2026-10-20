@@ -1,0 +1,70 @@
+{
+  "name": "@nibuil/dsh-voice-modes",
+  "version": "0.1.0",
+  "description": "Voice input for the DeepSeek Harness composer with direct, polish, translate and custom-role modes plus URL-routed ASR adapters.",
+  "type": "module",
+  "main": "./index.js",
+  "license": "MIT",
+  "author": {
+    "name": "bin-r00t",
+    "url": "https://github.com/bin-r00t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bin-r00t/dsh-voice-modes.git"
+  },
+  "homepage": "https://github.com/bin-r00t/dsh-voice-modes#readme",
+  "bugs": {
+    "url": "https://github.com/bin-r00t/dsh-voice-modes/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "voice-input",
+    "speech-to-text",
+    "asr",
+    "xiaomi-mimo"
+  ],
+  "engines": {
+    "node": ">=20",
+    "dsh": "^0.2.1-rc.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./providers": "./providers.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "providers.js",
+    "client.js",
+    "cordis.patch.yml",
+    "README.zh.md",
+    "locale/*.json",
+    "icon.svg"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check index.js && node --check client.js && node --check providers.js && node --check debug/mock-provider.mjs",
+    "prepublishOnly": "npm run check && npm test"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  }
+}

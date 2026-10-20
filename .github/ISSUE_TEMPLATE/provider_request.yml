@@ -1,0 +1,101 @@
+name: ASR provider request
+description: Propose a new speech-recognition provider or an adapter improvement.
+title: "[provider] "
+labels: ["provider", "enhancement"]
+body:
+  - type: input
+    id: provider
+    attributes:
+      label: Provider name
+      placeholder: Example ASR
+    validations:
+      required: true
+
+  - type: input
+    id: docs
+    attributes:
+      label: Official API documentation
+      placeholder: https://...
+    validations:
+      required: true
+
+  - type: input
+    id: endpoint
+    attributes:
+      label: Endpoint
+      placeholder: https://api.example.com/v1/...
+    validations:
+      required: true
+
+  - type: textarea
+    id: auth
+    attributes:
+      label: Authentication
+      description: Header name, token format, and any required account/region setup.
+      placeholder: |
+        Authorization: Bearer <key>
+        or
+        api-key: <key>
+    validations:
+      required: true
+
+  - type: textarea
+    id: request
+    attributes:
+      label: Request example
+      description: Include the request body or multipart fields. Remove secrets.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: response
+    attributes:
+      label: Response example
+      description: Redact personal data.
+      render: json
+    validations:
+      required: true
+
+  - type: input
+    id: formats
+    attributes:
+      label: Accepted audio formats
+      placeholder: wav, mp3, webm...
+    validations:
+      required: true
+
+  - type: input
+    id: limits
+    attributes:
+      label: Size and duration limits
+      placeholder: 10 MB, 60 seconds
+    validations:
+      required: true
+
+  - type: textarea
+    id: conversion
+    attributes:
+      label: Audio conversion requirements
+      description: Does the provider require a specific sample rate, channel count or container?
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I can submit a pull request with tests.
+        - label: I can provide sample audio with personal data removed.
+        - label: I can test the adapter on macOS.
+        - label: I can test the adapter on Linux.
+        - label: I can test the adapter on Windows.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I removed API keys and private data from all examples.
+          required: true
+        - label: I read docs/adding-asr-provider.md.
+          required: true
