@@ -12,7 +12,9 @@ All notable changes to this project are documented here. The format follows [Kee
 - Cancel and error paths now release microphone resources without uploading a partial recording.
 - Made the mode menu a pure-white floating surface with a stronger shadow and rounded mode icons.
 - Reworked roles into a fixed-height 4-column grid that pages horizontally, so the menu height no longer grows with role count.
-- Raised the settings dialog above other floating layers.
+- Raised the settings surface above other floating layers.
+- Turned Voice settings into a dedicated full-page view instead of a small modal.
+- Kept the microphone and processing spinner perfectly circular; processing no longer expands the toolbar into a wide pill.
 
 ## [0.1.0] - 2026-10-20
 

@@ -997,6 +997,65 @@ window.__ModuleLoader__.load({
         .vm-menu { max-height: min(560px, calc(100vh - 16px)); }
         .vm-role-page { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       }
+
+      /* Perfect circles for the microphone and capture controls. */
+      .vm-mic, .vm-capture-btn { border-radius: 50%; }
+      .vm-spinner { border-radius: 50%; }
+
+      /* Dedicated full-page settings surface replacing the old small modal. */
+      .vm-modal-backdrop {
+        z-index: 100000;
+        display: flex; align-items: stretch; justify-content: center;
+        padding: 0;
+        background: var(--dsw-alias-bg-base);
+        backdrop-filter: none;
+      }
+      .vm-modal {
+        width: 100%; max-width: none; height: 100%; max-height: none;
+        border: 0; border-radius: 0; background: var(--dsw-alias-bg-base);
+        box-shadow: none;
+      }
+      .vm-modal-head {
+        flex: none; position: sticky; top: 0; z-index: 2;
+        padding: 20px max(28px, calc((100vw - 780px) / 2)) 14px;
+        background: var(--dsw-alias-bg-base);
+        border-bottom: 1px solid var(--dsw-alias-border-l1);
+      }
+      .vm-modal-title { font-size: 20px; line-height: 1.3; }
+      .vm-modal-sub { margin-top: 4px; font-size: 12px; }
+      .vm-icon-btn { width: 32px; height: 32px; border-radius: 10px; }
+      .vm-modal-body {
+        flex: 1; min-height: 0; overflow-y: auto;
+        width: 100%; max-width: 780px; margin: 0 auto;
+        padding: 24px 28px 32px;
+      }
+      .vm-modal-foot {
+        flex: none;
+        width: 100%; max-width: 780px; margin: 0 auto;
+        padding: 14px 28px 20px;
+        background: var(--dsw-alias-bg-base);
+      }
+      .vm-section {
+        margin: 0 0 12px; padding: 16px 18px;
+        border: 1px solid var(--dsw-alias-border-l1);
+        border-radius: 14px;
+        background: var(--dsw-alias-bg-layer-1);
+      }
+      .vm-section + .vm-section {
+        border-top: 1px solid var(--dsw-alias-border-l1);
+        margin-top: 0;
+      }
+      .vm-section-title { font-size: 14px; margin-bottom: 4px; }
+      .vm-section-hint { margin-bottom: 12px; }
+      .vm-field { margin-bottom: 12px; }
+      .vm-role { background: var(--dsw-alias-bg-base); }
+      @media (max-width: 560px) {
+        .vm-modal-head { padding: 16px 16px 12px; }
+        .vm-modal-body { padding: 16px; }
+        .vm-modal-foot { padding: 12px 16px 16px; }
+        .vm-modal-title { font-size: 18px; }
+        .vm-section { padding: 14px; border-radius: 12px; }
+      }
     `
 
     function useLocale(locale) {
@@ -1045,7 +1104,7 @@ window.__ModuleLoader__.load({
       modeRef.current = mode
       roleIdRef.current = roleId
       activeChangeRef.current = onActiveChange
-      const expanded = phase !== 'idle'
+      const expanded = phase === 'recording'
 
       useEffect(() => {
         mountedRef.current = true
