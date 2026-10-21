@@ -10,6 +10,9 @@ All notable changes to this project are documented here. The format follows [Kee
 - Added mode icons and richer selected states to the mode menu.
 - Aligned spacing, focus rings, shadows and dark/light styling more closely with DSH controls.
 - Cancel and error paths now release microphone resources without uploading a partial recording.
+- Made the mode menu a pure-white floating surface with a stronger shadow and rounded mode icons.
+- Reworked roles into a fixed-height 4-column grid that pages horizontally, so the menu height no longer grows with role count.
+- Raised the settings dialog above other floating layers.
 
 ## [0.1.0] - 2026-10-20
 

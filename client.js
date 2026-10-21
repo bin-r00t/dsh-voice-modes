@@ -900,6 +900,103 @@ window.__ModuleLoader__.load({
         .vm-waveform { min-width: 48px; }
         .vm-timer { min-width: 30px; }
       }
+
+      /* Floating white menu, layered over DSH surfaces. */
+      .vm-menu {
+        z-index: 90000;
+        background: #ffffff;
+        color: #18181b;
+        border-color: rgba(24, 24, 27, .08);
+        max-height: min(620px, calc(100vh - 24px));
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        box-shadow:
+          0 28px 80px rgba(15, 23, 42, .22),
+          0 8px 24px rgba(15, 23, 42, .12),
+          0 0 0 1px rgba(15, 23, 42, .03);
+        animation: vm-menu-in .16s cubic-bezier(.2, .8, .2, 1);
+        transform-origin: bottom center;
+        scrollbar-width: thin;
+      }
+      .vm-menu-heading, .vm-menu-desc, .vm-menu-empty, .vm-menu-settings svg { color: #71717a; }
+      .vm-menu-name, .vm-menu-settings { color: #18181b; }
+      .vm-menu-item:hover, .vm-menu-settings:hover { background: #f4f4f5; }
+      .vm-menu-item[aria-checked="true"], .vm-menu-item[aria-selected="true"] {
+        background: #eef4ff;
+      }
+      .vm-menu-icon {
+        width: 28px; height: 28px; border-radius: 11px;
+        background: #f4f4f5; color: #71717a;
+      }
+      .vm-menu-item[aria-checked="true"] .vm-menu-icon {
+        color: var(--dsw-alias-brand-primary);
+        background: color-mix(in srgb, var(--dsw-alias-brand-primary) 12%, #ffffff);
+      }
+      .vm-menu-check { color: var(--dsw-alias-brand-primary); }
+      .vm-menu-sep { background: rgba(24, 24, 27, .08); }
+      .vm-menu-heading-row {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 8px; padding: 8px 9px 5px;
+      }
+      .vm-menu-heading-row .vm-menu-heading { padding: 0; }
+      .vm-menu-count {
+        min-width: 18px; height: 17px; padding: 0 5px; border-radius: 999px;
+        display: inline-flex; align-items: center; justify-content: center;
+        background: #f4f4f5; color: #71717a;
+        font-size: 10px; line-height: 1; font-variant-numeric: tabular-nums;
+      }
+      .vm-role-strip {
+        display: flex; overflow-x: auto; overflow-y: hidden;
+        max-height: 184px; padding: 0 3px 3px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(24, 24, 27, .18) transparent;
+      }
+      .vm-role-strip::-webkit-scrollbar { height: 4px; }
+      .vm-role-strip::-webkit-scrollbar-track { background: transparent; }
+      .vm-role-strip::-webkit-scrollbar-thumb {
+        background: rgba(24, 24, 27, .16); border-radius: 999px;
+      }
+      .vm-role-page {
+        flex: 0 0 100%; min-width: 0; scroll-snap-align: start;
+        display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-auto-rows: 40px; gap: 5px; align-content: start;
+      }
+      .vm-role-card {
+        min-width: 0; height: 40px; padding: 4px 3px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 2px; cursor: pointer;
+        border: 1px solid rgba(24, 24, 27, .08); border-radius: 10px;
+        background: #fafafa; color: #18181b; font: inherit;
+        transition: background .12s ease, border-color .12s ease, color .12s ease;
+      }
+      .vm-role-card:hover { background: #f4f4f5; border-color: rgba(24, 24, 27, .14); }
+      .vm-role-card[aria-checked="true"] {
+        background: #eef4ff;
+        border-color: color-mix(in srgb, var(--dsw-alias-brand-primary) 36%, #ffffff);
+      }
+      .vm-role-card svg { width: 13px; height: 13px; color: #71717a; flex: none; }
+      .vm-role-card[aria-checked="true"] svg { color: var(--dsw-alias-brand-primary); }
+      .vm-role-name {
+        max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        font-size: 10.5px; line-height: 1.15;
+      }
+      .vm-status { color: #b45309; }
+      .vm-status.ok { color: #15803d; }
+      .vm-modal-backdrop { z-index: 100000; }
+      @keyframes vm-menu-in {
+        from { opacity: 0; transform: translateY(6px) scale(.985); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .vm-menu { animation: none; }
+        .vm-role-card { transition: none; }
+      }
+      @media (max-width: 560px) {
+        .vm-menu { max-height: min(560px, calc(100vh - 16px)); }
+        .vm-role-page { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      }
     `
 
     function useLocale(locale) {
@@ -1593,40 +1690,44 @@ window.__ModuleLoader__.load({
             ),
           ),
           h('div', { className: 'vm-menu-sep' }),
-          h('div', { className: 'vm-menu-heading' }, t('customRoles')),
+          h(
+            'div',
+            { className: 'vm-menu-heading-row' },
+            h('div', { className: 'vm-menu-heading' }, t('customRoles')),
+            roles.length ? h('span', { className: 'vm-menu-count' }, String(roles.length)) : null,
+          ),
           roles.length
-            ? roles.map((role) =>
-                h(
-                  'button',
-                  {
-                    type: 'button',
-                    key: role.id,
-                    className: 'vm-menu-item',
-                    role: 'menuitemradio',
-                    'aria-checked': mode === 'role' && roleId === role.id,
-                    onClick: () => {
-                      setRole(role.id)
-                      setMode('role')
-                      setMenuOpen(false)
-                    },
-                  },
-                  h('span', { className: 'vm-menu-icon', 'aria-hidden': true }, modeIcon('role')),
-                  h(
-                    'span',
-                    { className: 'vm-menu-copy' },
-                    h('span', { className: 'vm-menu-name' }, role.name),
-                    h('span', { className: 'vm-menu-desc' }, t('modeRoleDesc')),
-                  ),
-                  h(
-                    'span',
-                    {
-                      className: `vm-menu-check${
-                        mode === 'role' && roleId === role.id ? '' : ' empty'
-                      }`,
-                    },
-                    checkIcon(),
-                  ),
-                ),
+            ? h(
+                'div',
+                { className: 'vm-role-strip', role: 'group', 'aria-label': t('customRoles') },
+                Array.from({ length: Math.ceil(roles.length / 16) }, (_, pageIndex) => {
+                  const page = roles.slice(pageIndex * 16, pageIndex * 16 + 16)
+                  return h(
+                    'div',
+                    { className: 'vm-role-page', key: pageIndex, role: 'presentation' },
+                    page.map((role) =>
+                      h(
+                        'button',
+                        {
+                          type: 'button',
+                          key: role.id,
+                          className: 'vm-role-card',
+                          role: 'menuitemradio',
+                          'aria-checked': mode === 'role' && roleId === role.id,
+                          'aria-label': role.name,
+                          title: role.name,
+                          onClick: () => {
+                            setRole(role.id)
+                            setMode('role')
+                            setMenuOpen(false)
+                          },
+                        },
+                        modeIcon('role'),
+                        h('span', { className: 'vm-role-name' }, role.name),
+                      ),
+                    ),
+                  )
+                }),
               )
             : h('div', { className: 'vm-menu-empty' }, t('noRoles')),
           h('div', { className: 'vm-menu-sep' }),
