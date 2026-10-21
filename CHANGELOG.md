@@ -15,6 +15,10 @@ All notable changes to this project are documented here. The format follows [Kee
 - Raised the settings surface above other floating layers.
 - Turned Voice settings into a dedicated full-page view instead of a small modal.
 - Kept the microphone and processing spinner perfectly circular; processing no longer expands the toolbar into a wide pill.
+- Flattened settings sections; hierarchy now comes from type scale and spacing rather than borders.
+- Moved Add role into the section header as a prominent action and replaced inline role forms with light summary cards.
+- Added a compact role detail dialog for editing or deleting one role at a time.
+- Tuned spacing around the custom-role heading and role grid in the floating menu.
 
 ## [0.1.0] - 2026-10-20
 

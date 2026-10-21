@@ -92,6 +92,12 @@ window.__ModuleLoader__.load({
       rolesSection: '可用角色',
       rolesHint: '角色用于「自定义角色」模式，提示词会作为系统指令发送给第二供应商。',
       addRole: '新增角色',
+      editRole: '编辑',
+      roleDialogNewTitle: '新增角色',
+      roleDialogEditTitle: '编辑角色',
+      roleDialogHint: '角色名称用于菜单展示，提示词会作为系统指令发送给第二供应商。',
+      saveRole: '保存角色',
+      roleValidation: '角色名称和提示词都不能为空。',
       roleName: '角色名称',
       rolePrompt: '提示词',
       roleNamePlaceholder: '例如：周报助手',
@@ -183,6 +189,13 @@ window.__ModuleLoader__.load({
       rolesHint:
         'Roles power the Custom role mode. The prompt is sent to the second provider as a system instruction.',
       addRole: 'Add role',
+      editRole: 'Edit',
+      roleDialogNewTitle: 'New role',
+      roleDialogEditTitle: 'Edit role',
+      roleDialogHint:
+        'The name is shown in the mode menu; the prompt is sent to the second provider as a system instruction.',
+      saveRole: 'Save role',
+      roleValidation: 'Role name and prompt are both required.',
       roleName: 'Role name',
       rolePrompt: 'Prompt',
       roleNamePlaceholder: 'e.g. Weekly report assistant',
@@ -582,6 +595,19 @@ window.__ModuleLoader__.load({
       )
     }
 
+    function plusIcon() {
+      return h(
+        'svg',
+        { viewBox: '0 0 16 16', fill: 'none', 'aria-hidden': true },
+        h('path', {
+          d: 'M8 3v10M3 8h10',
+          stroke: 'currentColor',
+          'stroke-width': 1.8,
+          'stroke-linecap': 'round',
+        }),
+      )
+    }
+
     const STYLE = `
       .vm-root { position: relative; display: inline-flex; align-items: center; gap: 4px; min-width: 0; }
       .vm-mic {
@@ -948,7 +974,7 @@ window.__ModuleLoader__.load({
       }
       .vm-role-strip {
         display: flex; overflow-x: auto; overflow-y: hidden;
-        max-height: 184px; padding: 0 3px 3px;
+        max-height: 196px; padding: 6px;
         scroll-snap-type: x mandatory;
         scrollbar-width: thin;
         scrollbar-color: rgba(24, 24, 27, .18) transparent;
@@ -1054,7 +1080,146 @@ window.__ModuleLoader__.load({
         .vm-modal-body { padding: 16px; }
         .vm-modal-foot { padding: 12px 16px 16px; }
         .vm-modal-title { font-size: 18px; }
-        .vm-section { padding: 14px; border-radius: 12px; }
+      }
+
+      /* Give the role heading extra breathing room above its grid. */
+      .vm-menu-heading-row { padding-bottom: 4px; }
+
+      /* Flat settings sections: hierarchy from type and spacing, not borders. */
+      .vm-section {
+        margin: 0 0 32px; padding: 0;
+        border: 0; border-radius: 0; background: transparent;
+      }
+      .vm-section + .vm-section {
+        margin-top: 0; padding-top: 0; border-top: 0;
+      }
+      .vm-section-title {
+        margin: 0 0 4px;
+        font-size: 16px; font-weight: 650; line-height: 1.35;
+        letter-spacing: -.01em;
+      }
+      .vm-section-hint {
+        margin: 0 0 16px;
+        font-size: 12px; line-height: 1.55;
+      }
+      .vm-section-head {
+        display: flex; align-items: flex-start; justify-content: space-between;
+        gap: 16px; margin-bottom: 14px;
+      }
+      .vm-section-head-copy { min-width: 0; }
+      .vm-section-head .vm-section-title { margin-bottom: 3px; }
+      .vm-section-head .vm-section-hint { margin-bottom: 0; }
+      .vm-add-role {
+        height: 30px; padding: 0 12px; flex: none;
+        display: inline-flex; align-items: center; gap: 5px;
+        border: 1px solid transparent; border-radius: 9px; cursor: pointer;
+        background: var(--dsw-alias-brand-primary);
+        color: var(--dsw-alias-bg-base);
+        font: inherit; font-size: 12px; font-weight: 500; line-height: 1;
+      }
+      .vm-add-role:hover {
+        background: color-mix(in srgb, var(--dsw-alias-brand-primary) 88%, var(--dsw-alias-label-primary));
+      }
+      .vm-add-role svg { width: 12px; height: 12px; display: block; }
+      .vm-role-list {
+        display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px;
+      }
+      .vm-role-summary {
+        min-width: 0; display: flex; align-items: flex-start; gap: 10px;
+        padding: 12px; text-align: left; cursor: pointer;
+        border: 1px solid var(--dsw-alias-border-l1); border-radius: 12px;
+        background: color-mix(in srgb, var(--dsw-alias-bg-layer-1) 74%, transparent);
+        color: var(--dsw-alias-label-primary); font: inherit;
+        transition: background .12s ease, border-color .12s ease;
+      }
+      .vm-role-summary:hover {
+        background: var(--dsw-alias-bg-layer-2);
+        border-color: var(--dsw-alias-border-l2);
+      }
+      .vm-role-summary-icon {
+        width: 28px; height: 28px; flex: none; border-radius: 9px;
+        display: grid; place-items: center;
+        background: color-mix(in srgb, var(--dsw-alias-brand-primary) 10%, transparent);
+        color: var(--dsw-alias-brand-primary);
+      }
+      .vm-role-summary-icon svg { width: 14px; height: 14px; }
+      .vm-role-summary-copy {
+        flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px;
+      }
+      .vm-role-summary-name {
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        font-size: 12.5px; font-weight: 600; line-height: 1.3;
+      }
+      .vm-role-summary-prompt {
+        display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        overflow: hidden; color: var(--dsw-alias-label-secondary);
+        font-size: 11px; line-height: 1.45;
+      }
+      .vm-role-summary-edit {
+        flex: none; margin-top: 2px; opacity: 0;
+        color: var(--dsw-alias-label-secondary);
+        font-size: 10.5px; line-height: 1;
+        transition: opacity .12s ease;
+      }
+      .vm-role-summary:hover .vm-role-summary-edit { opacity: 1; }
+      .vm-role-empty {
+        padding: 18px; border-radius: 12px; text-align: center;
+        background: color-mix(in srgb, var(--dsw-alias-bg-layer-1) 74%, transparent);
+        color: var(--dsw-alias-label-secondary); font-size: 12px;
+      }
+      .vm-add-role:focus-visible, .vm-role-summary:focus-visible,
+      .vm-role-delete:focus-visible {
+        outline: 2px solid var(--dsw-alias-brand-primary); outline-offset: 2px;
+      }
+      .vm-role-modal-backdrop {
+        position: fixed; inset: 0; z-index: 100010;
+        display: grid; place-items: center; padding: 20px;
+        background: color-mix(in srgb, var(--dsw-alias-bg-base) 52%, transparent);
+        backdrop-filter: blur(5px);
+      }
+      .vm-role-modal {
+        width: min(560px, 100%); max-height: min(680px, calc(100vh - 40px));
+        display: flex; flex-direction: column; overflow: hidden;
+        border: 1px solid var(--dsw-alias-border-l1); border-radius: 16px;
+        background: var(--dsw-alias-bg-overlay);
+        color: var(--dsw-alias-label-primary);
+        box-shadow: 0 24px 70px color-mix(in srgb, var(--dsw-alias-label-primary) 24%, transparent);
+      }
+      .vm-role-modal-head {
+        flex: none; display: flex; align-items: flex-start; gap: 12px;
+        padding: 16px 18px 12px;
+        border-bottom: 1px solid var(--dsw-alias-border-l1);
+      }
+      .vm-role-modal-title {
+        margin: 0; font-size: 15px; font-weight: 600; line-height: 1.35;
+      }
+      .vm-role-modal-hint {
+        margin: 3px 0 0; font-size: 11px; line-height: 1.5;
+        color: var(--dsw-alias-label-secondary);
+      }
+      .vm-role-modal-body { padding: 16px 18px; overflow: auto; }
+      .vm-role-modal-body .vm-field:last-child { margin-bottom: 0; }
+      .vm-role-modal-body .vm-textarea { min-height: 150px; }
+      .vm-role-modal-foot {
+        flex: none; display: flex; align-items: center; gap: 8px;
+        padding: 12px 18px;
+        border-top: 1px solid var(--dsw-alias-border-l1);
+      }
+      .vm-role-modal-spacer { flex: 1; }
+      .vm-role-delete {
+        border: 0; background: transparent; padding: 4px 0; cursor: pointer;
+        color: var(--dsw-alias-state-error-primary);
+        font: inherit; font-size: 11px;
+      }
+      .vm-role-delete:hover { text-decoration: underline; }
+      @media (max-width: 640px) {
+        .vm-role-list { grid-template-columns: 1fr; }
+        .vm-section { margin-bottom: 26px; }
+        .vm-section-head { gap: 10px; }
+        .vm-role-modal-backdrop { padding: 12px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .vm-role-summary, .vm-role-summary-edit { transition: none; }
       }
     `
 
@@ -1077,11 +1242,13 @@ window.__ModuleLoader__.load({
       const [saveError, setSaveError] = useState('')
       const [menuOpen, setMenuOpen] = useState(false)
       const [menuPosition, setMenuPosition] = useState(null)
+      const [roleEditor, setRoleEditor] = useState(null)
 
       const rootRef = useRef(null)
       const modeButtonRef = useRef(null)
       const menuRef = useRef(null)
       const modalRef = useRef(null)
+      const roleModalRef = useRef(null)
       const recorderRef = useRef(null)
       const streamRef = useRef(null)
       const chunksRef = useRef([])
@@ -1105,6 +1272,7 @@ window.__ModuleLoader__.load({
       roleIdRef.current = roleId
       activeChangeRef.current = onActiveChange
       const expanded = phase === 'recording'
+      const roleEditorOpen = roleEditor !== null
 
       useEffect(() => {
         mountedRef.current = true
@@ -1233,16 +1401,31 @@ window.__ModuleLoader__.load({
           first?.focus()
         }, 0)
         const onKeyDown = (event) => {
-          if (event.key === 'Escape') {
-            setSettingsOpen(false)
-            setSaveError('')
+          if (event.key !== 'Escape') return
+          if (roleEditorOpen) {
+            setRoleEditor(null)
+            return
           }
+          setSettingsOpen(false)
+          setSaveError('')
         }
         document.addEventListener('keydown', onKeyDown)
         return () => {
           clearTimeout(timer)
           document.removeEventListener('keydown', onKeyDown)
         }
+      }, [settingsOpen, roleEditorOpen])
+
+      useEffect(() => {
+        if (!roleEditorOpen) return undefined
+        const timer = setTimeout(() => {
+          roleModalRef.current?.querySelector('input, textarea')?.focus()
+        }, 0)
+        return () => clearTimeout(timer)
+      }, [roleEditorOpen])
+
+      useEffect(() => {
+        if (!settingsOpen) setRoleEditor(null)
       }, [settingsOpen])
 
       useEffect(() => {
@@ -1312,6 +1495,7 @@ window.__ModuleLoader__.load({
       function openSettings() {
         setMenuOpen(false)
         setSaveError('')
+        setRoleEditor(null)
         if (settings) setDraft(makeDraft(settings))
         setSettingsOpen(true)
         if (!settings && !settingsError) void loadSettings()
@@ -1499,31 +1683,66 @@ window.__ModuleLoader__.load({
         setDraft((current) => (current ? { ...current, [field]: value } : current))
       }
 
-      function updateRole(index, field, value) {
-        setDraft((current) => {
-          if (!current) return current
-          const nextRoles = current.roles.map((role, roleIndex) =>
-            roleIndex === index ? { ...role, [field]: value } : role,
-          )
-          return { ...current, roles: nextRoles }
-        })
+      function openRoleEditor(index) {
+        if (!draft) return
+        if (index === null) {
+          setRoleEditor({ index: null, name: '', prompt: '', error: '' })
+          return
+        }
+        const role = draft.roles[index]
+        if (!role) return
+        setRoleEditor({ index, name: role.name, prompt: role.prompt, error: '' })
       }
 
-      function addRole() {
+      function updateRoleEditor(field, value) {
+        setRoleEditor((current) => (current ? { ...current, [field]: value, error: '' } : current))
+      }
+
+      function closeRoleEditor() {
+        setRoleEditor(null)
+      }
+
+      function saveRoleEditor() {
+        const editor = roleEditor
+        if (!editor) return
+        const name = editor.name.trim()
+        const prompt = editor.prompt.trim()
+        if (!name || !prompt) {
+          setRoleEditor({ ...editor, error: t('roleValidation') })
+          return
+        }
         setDraft((current) => {
           if (!current) return current
+          if (editor.index === null) {
+            return {
+              ...current,
+              roles: [...current.roles, { id: randomId(), name, prompt }],
+            }
+          }
           return {
             ...current,
-            roles: [...current.roles, { id: randomId(), name: '', prompt: '' }],
+            roles: current.roles.map((role, index) =>
+              index === editor.index ? { ...role, name, prompt } : role,
+            ),
           }
         })
+        setRoleEditor(null)
       }
 
-      function removeRole(index) {
-        setDraft((current) => {
-          if (!current) return current
-          return { ...current, roles: current.roles.filter((_, roleIndex) => roleIndex !== index) }
-        })
+      function deleteRoleEditor() {
+        const editor = roleEditor
+        if (!editor) return
+        if (editor.index !== null) {
+          setDraft((current) =>
+            current
+              ? {
+                  ...current,
+                  roles: current.roles.filter((_, index) => index !== editor.index),
+                }
+              : current,
+          )
+        }
+        setRoleEditor(null)
       }
 
       async function save() {
@@ -2020,51 +2239,56 @@ window.__ModuleLoader__.load({
                     h(
                       'section',
                       { className: 'vm-section' },
-                      h('h3', { className: 'vm-section-title' }, t('rolesSection')),
-                      h('p', { className: 'vm-section-hint' }, t('rolesHint')),
-                      ...draft.roles.map((role, index) =>
+                      h(
+                        'div',
+                        { className: 'vm-section-head' },
                         h(
                           'div',
-                          { className: 'vm-role', key: role.id },
-                          h(
-                            'div',
-                            { className: 'vm-role-head' },
-                            h('span', { className: 'vm-role-index' }, String(index + 1)),
-                            h('span', { className: 'vm-label' }, t('roleName')),
-                            h(
-                              'button',
-                              {
-                                type: 'button',
-                                className: 'vm-link-btn danger',
-                                onClick: () => removeRole(index),
-                              },
-                              t('deleteRole'),
-                            ),
-                          ),
-                          h('input', {
-                            className: 'vm-input',
-                            value: role.name,
-                            placeholder: t('roleNamePlaceholder'),
-                            style: { marginBottom: '6px' },
-                            onChange: (event) => updateRole(index, 'name', event.target.value),
-                          }),
-                          h('textarea', {
-                            className: 'vm-textarea',
-                            value: role.prompt,
-                            placeholder: t('rolePromptPlaceholder'),
-                            onChange: (event) => updateRole(index, 'prompt', event.target.value),
-                          }),
+                          { className: 'vm-section-head-copy' },
+                          h('h3', { className: 'vm-section-title' }, t('rolesSection')),
+                          h('p', { className: 'vm-section-hint' }, t('rolesHint')),
+                        ),
+                        h(
+                          'button',
+                          {
+                            type: 'button',
+                            className: 'vm-add-role',
+                            onClick: () => openRoleEditor(null),
+                          },
+                          plusIcon(),
+                          h('span', null, t('addRole')),
                         ),
                       ),
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          className: 'vm-link-btn',
-                          onClick: addRole,
-                        },
-                        `+ ${t('addRole')}`,
-                      ),
+                      draft.roles.length
+                        ? h(
+                            'div',
+                            { className: 'vm-role-list' },
+                            draft.roles.map((role, index) =>
+                              h(
+                                'button',
+                                {
+                                  type: 'button',
+                                  key: role.id,
+                                  className: 'vm-role-summary',
+                                  'aria-label': `${t('editRole')} ${role.name}`,
+                                  onClick: () => openRoleEditor(index),
+                                },
+                                h(
+                                  'span',
+                                  { className: 'vm-role-summary-icon', 'aria-hidden': true },
+                                  modeIcon('role'),
+                                ),
+                                h(
+                                  'span',
+                                  { className: 'vm-role-summary-copy' },
+                                  h('span', { className: 'vm-role-summary-name' }, role.name),
+                                  h('span', { className: 'vm-role-summary-prompt' }, role.prompt),
+                                ),
+                                h('span', { className: 'vm-role-summary-edit' }, t('editRole')),
+                              ),
+                            ),
+                          )
+                        : h('div', { className: 'vm-role-empty' }, t('noRoles')),
                     ),
                   ),
             ),
@@ -2100,6 +2324,116 @@ window.__ModuleLoader__.load({
         )
       }
 
+      function renderRoleEditor() {
+        if (!roleEditor) return null
+        const isNew = roleEditor.index === null
+        return h(
+          'div',
+          {
+            className: 'vm-role-modal-backdrop',
+            onMouseDown: (event) => {
+              if (event.target === event.currentTarget) closeRoleEditor()
+            },
+          },
+          h(
+            'div',
+            {
+              className: 'vm-role-modal',
+              ref: roleModalRef,
+              role: 'dialog',
+              'aria-modal': 'true',
+              'aria-label': isNew ? t('roleDialogNewTitle') : t('roleDialogEditTitle'),
+            },
+            h(
+              'div',
+              { className: 'vm-role-modal-head' },
+              h(
+                'div',
+                null,
+                h(
+                  'h3',
+                  { className: 'vm-role-modal-title' },
+                  isNew ? t('roleDialogNewTitle') : t('roleDialogEditTitle'),
+                ),
+                h('p', { className: 'vm-role-modal-hint' }, t('roleDialogHint')),
+              ),
+              h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'vm-icon-btn',
+                  'aria-label': t('close'),
+                  title: t('close'),
+                  onClick: closeRoleEditor,
+                },
+                closeIcon(),
+              ),
+            ),
+            h(
+              'div',
+              { className: 'vm-role-modal-body' },
+              roleEditor.error ? h('p', { className: 'vm-modal-error' }, roleEditor.error) : null,
+              h(
+                'div',
+                { className: 'vm-field' },
+                h('label', { className: 'vm-label' }, t('roleName')),
+                h('input', {
+                  className: 'vm-input',
+                  value: roleEditor.name,
+                  placeholder: t('roleNamePlaceholder'),
+                  onChange: (event) => updateRoleEditor('name', event.target.value),
+                }),
+              ),
+              h(
+                'div',
+                { className: 'vm-field' },
+                h('label', { className: 'vm-label' }, t('rolePrompt')),
+                h('textarea', {
+                  className: 'vm-textarea',
+                  value: roleEditor.prompt,
+                  placeholder: t('rolePromptPlaceholder'),
+                  onChange: (event) => updateRoleEditor('prompt', event.target.value),
+                }),
+              ),
+            ),
+            h(
+              'div',
+              { className: 'vm-role-modal-foot' },
+              !isNew
+                ? h(
+                    'button',
+                    {
+                      type: 'button',
+                      className: 'vm-role-delete',
+                      onClick: deleteRoleEditor,
+                    },
+                    t('deleteRole'),
+                  )
+                : null,
+              h('span', { className: 'vm-role-modal-spacer' }),
+              h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'vm-secondary',
+                  onClick: closeRoleEditor,
+                },
+                t('cancel'),
+              ),
+              h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'vm-primary',
+                  onClick: saveRoleEditor,
+                },
+                t('saveRole'),
+              ),
+            ),
+          ),
+        )
+      }
+
       return h(
         'div',
         {
@@ -2114,6 +2448,7 @@ window.__ModuleLoader__.load({
           : h('div', { className: 'vm-idle' }, renderMic(), renderModeButton()),
         renderModeMenu(),
         renderSettingsModal(),
+        renderRoleEditor(),
       )
     }
 
