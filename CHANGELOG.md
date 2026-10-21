@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Refreshed the composer UI with an expanded recording row, live microphone waveform, formatted timer, cancel/stop controls, and a processing state.
+- Added mode icons and richer selected states to the mode menu.
+- Aligned spacing, focus rings, shadows and dark/light styling more closely with DSH controls.
+- Cancel and error paths now release microphone resources without uploading a partial recording.
+
 ## [0.1.0] - 2026-10-20
 
 ### Added
