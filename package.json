@@ -1,6 +1,6 @@
 {
   "name": "@nibuil/dsh-voice-modes",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Voice input for the DeepSeek Harness composer with direct, polish, translate and custom-role modes plus URL-routed ASR adapters.",
   "type": "module",
   "main": "./index.js",

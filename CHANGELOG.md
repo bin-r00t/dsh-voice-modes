@@ -2,24 +2,32 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.2.0] - 2026-10-21
+
+### Added
+
+- Dedicated full-page Voice settings surface with a fixed header, scrollable content and persistent save controls.
+- Role detail dialog for creating, editing and deleting one role at a time.
+- Prominent Add role action in the role section header.
+- Light role summary cards with a two-line prompt preview.
+- Live microphone waveform, formatted recording timer and cancel/stop controls.
+- Mode icons and richer selected states in the floating mode menu.
 
 ### Changed
 
-- Refreshed the composer UI with an expanded recording row, live microphone waveform, formatted timer, cancel/stop controls, and a processing state.
-- Added mode icons and richer selected states to the mode menu.
-- Aligned spacing, focus rings, shadows and dark/light styling more closely with DSH controls.
-- Cancel and error paths now release microphone resources without uploading a partial recording.
-- Made the mode menu a pure-white floating surface with a stronger shadow and rounded mode icons.
-- Reworked roles into a fixed-height 4-column grid that pages horizontally, so the menu height no longer grows with role count.
+- Refreshed the composer UI and aligned spacing, focus rings, shadows and dark/light styling with DSH controls.
+- Made the mode menu a pure-white floating surface with a stronger shadow and more rounded icons.
+- Reworked roles into a fixed-height four-column grid that pages horizontally.
+- Flattened settings sections; hierarchy now comes from type scale and spacing instead of borders.
+- Processing now returns to a circular spinner button instead of expanding the toolbar into a wide pill.
+- Tuned spacing around the custom-role heading and role grid.
+
+### Fixed
+
+- Microphone, capture controls and loading spinner now render as true circles.
+- Fixed spinner sizing so its width and height apply.
+- Cancel and error paths release microphone resources without uploading a partial recording.
 - Raised the settings surface above other floating layers.
-- Turned Voice settings into a dedicated full-page view instead of a small modal.
-- Kept the microphone and processing spinner perfectly circular; processing no longer expands the toolbar into a wide pill.
-- Fixed spinner sizing so its width and height apply and it renders as a true circle.
-- Flattened settings sections; hierarchy now comes from type scale and spacing rather than borders.
-- Moved Add role into the section header as a prominent action and replaced inline role forms with light summary cards.
-- Added a compact role detail dialog for editing or deleting one role at a time.
-- Tuned spacing around the custom-role heading and role grid in the floating menu.
 
 ## [0.1.0] - 2026-10-20
 
@@ -38,4 +46,5 @@ All notable changes to this project are documented here. The format follows [Kee
 - Mock provider and automated provider/host tests.
 - Initial community documentation, security policy and CI workflows.
 
+[0.2.0]: https://github.com/bin-r00t/dsh-voice-modes/releases/tag/v0.2.0
 [0.1.0]: https://github.com/bin-r00t/dsh-voice-modes/releases/tag/v0.1.0
