@@ -1026,7 +1026,12 @@ window.__ModuleLoader__.load({
 
       /* Perfect circles for the microphone and capture controls. */
       .vm-mic, .vm-capture-btn { border-radius: 50%; }
-      .vm-spinner { border-radius: 50%; }
+      .vm-spinner {
+        display: inline-block;
+        box-sizing: border-box;
+        flex: none;
+        border-radius: 50%;
+      }
 
       /* Dedicated full-page settings surface replacing the old small modal. */
       .vm-modal-backdrop {
